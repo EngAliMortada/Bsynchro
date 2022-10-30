@@ -28,6 +28,9 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCore.Triggered.Internal;
+using Bsynchro.Triggers;
 
 namespace Bsynchro;
 
@@ -61,7 +64,13 @@ public class BsynchroHttpApiHostModule : AbpModule
     {
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-
+        context.Services.AddDbContext<BsynchroDbContext>(options =>
+        {
+            options.UseTriggers(triggerOptions =>
+            {
+                triggerOptions.AddTrigger<AddTransactionTrigger>();
+            });
+        });
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureUrls(configuration);

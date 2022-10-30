@@ -11,11 +11,16 @@ namespace Bsynchro.Accounts
 {
     public class Account : FullAuditedAggregateRoot<long>
     {
+        #region properties
         public AccountType AccountType { get; private set; }
         public int CustomerId { get; private set; }
         public ulong Balance { get; private set; }
         public virtual Customer Customer { get; private set; }
         public virtual ICollection<Transaction> Transactions { get; private set; }
+
+        //may add currency type property later
+        #endregion
+
 
         protected Account()
         {

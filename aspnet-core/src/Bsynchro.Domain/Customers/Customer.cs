@@ -13,33 +13,33 @@ namespace Bsynchro.Customers
 {
     public class Customer : FullAuditedAggregateRoot<int>
     {
+        #region properties
         [Required]
         public string Name { get; private set; }
         [Required]
         public string SurName { get; private set; }
 
-        public ulong Balance { get; private set; }
-
         public virtual ICollection<Account> Accounts { get; private set; }
+        #endregion
+
 
         protected Customer()
         {
 
         }
 
-        private Customer(string name, string surName, ulong balance)
+        private Customer(string name, string surName)
         {
             Name = name;
             SurName = surName;
-            Balance = balance;
         }
 
-        public static Customer Create (string name, string surName, ulong balance)
+        public static Customer Create (string name, string surName)
         {
             Check.NotNull(name, nameof(name));
             Check.NotNull(surName, nameof(surName));
 
-            return new Customer (name, surName, balance);
+            return new Customer (name, surName);
         }
 
         public void SetName (string name)
@@ -68,9 +68,20 @@ namespace Bsynchro.Customers
         {
             return new List<Customer>
             {
-                new Customer {Id = 1, Name = "Customer1", SurName = "One", Balance = 0 },
-                new Customer {Id = 2, Name = "Customer2", SurName = "Two", Balance = 0 }
+                new Customer {Id = 1, Name = "Customer1", SurName = "One"},
+                new Customer {Id = 2, Name = "Customer2", SurName = "Two"}
             };
+        }
+
+        public ulong GetTotalBalance ()
+        {
+            ulong total = 0;
+            foreach (var account in Accounts)
+            {
+                total += account.Balance;
+            }
+
+            return total;
         }
     }
 }

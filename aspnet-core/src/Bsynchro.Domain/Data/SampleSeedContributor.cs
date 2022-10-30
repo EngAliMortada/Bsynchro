@@ -32,8 +32,8 @@ namespace Bsynchro.Data
             {
                 List<Customer> sampleCustomers = new List<Customer>
                 {
-                    Customer.Create("Customer1", "sample1", 0),
-                    Customer.Create("Customer2", "sample2", 100)
+                    Customer.Create("Customer1", "sample1"),
+                    Customer.Create("Customer2", "sample2")
                 };
 
                 await _customerRepository.InsertManyAsync(sampleCustomers, autoSave: true);

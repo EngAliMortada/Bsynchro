@@ -9,11 +9,15 @@ namespace Bsynchro.Accounts
 {
     public class Transaction : FullAuditedEntity<Guid>
     {
+        #region properties
         public long AccountId { get; private set; }
         public virtual Account Account { get; private set; }
         public ulong? Deposit { get; private set; }
         public ulong? Withdraw { get; private set; }
+        #endregion
 
+
+        
         protected Transaction()
         {
 
