@@ -56,7 +56,21 @@ namespace Bsynchro.Customers
 
         public void AddAccount (Account account)
         {
+            if(Accounts == null) Accounts = new List<Account>();
             Accounts.Add(account);
+        }
+
+
+
+
+        //this method used only for quick seeding samples
+        public static List<Customer> CreateSampleCustomers ()
+        {
+            return new List<Customer>
+            {
+                new Customer {Id = 1, Name = "Customer1", SurName = "One", Balance = 0 },
+                new Customer {Id = 2, Name = "Customer2", SurName = "Two", Balance = 0 }
+            };
         }
     }
 }

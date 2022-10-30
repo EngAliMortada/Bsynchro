@@ -7,7 +7,7 @@ using Volo.Abp.Domain.Repositories;
 
 namespace Bsynchro.Customers
 {
-    public interface ICustomerRepository : IRepository<Customer, int>
+    public interface ICustomersRepository : IRepository<Customer, int>
     {
     }
 }
