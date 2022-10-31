@@ -24,7 +24,7 @@
 
 
   <div class="row bottom-space">
-    <div class="col-10">
+    <div class="col-md-10 col-sm-12">
       <label class="bottom-space">Accounts for selected user</label>
       <table class="table left-space">
         <tr>
@@ -40,6 +40,10 @@
           <td><Button class="btn btn-primary" (click)="showTransactions(account)">show Transactions</Button></td>
         </tr>
       </table>
+    </div>
+
+    <div class="col-md-2 col-sm-12">
+      <button class="refreshBtn left-space top-space" (click)="refresh()">Refresh</button>
     </div>
   </div>
 

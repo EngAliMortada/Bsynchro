@@ -2,7 +2,7 @@ import { AuthService } from '@abp/ng.core';
 import { Component, OnInit } from '@angular/core';
 import { AccountDto, AccountsService } from '@proxy/accounts';
 import { CustomerDto, CustomersService } from '@proxy/customers';
-import { TransactionDto } from '@proxy/transactions';
+import { TransactionDto, TransactionsService } from '@proxy/transactions';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
@@ -15,6 +15,8 @@ export class HomeComponent implements OnInit {
     return this.oAuthService.hasValidAccessToken();
   }
   
+
+  selectedAccount;
   isSaving = false;
   transactions: TransactionDto [] = [];
   accounts: AccountDto [] = [];
@@ -25,27 +27,29 @@ export class HomeComponent implements OnInit {
     private oAuthService: OAuthService,
     private authService: AuthService,
     private customerService: CustomersService,
-    private accountservice: AccountsService
+    private accountservice: AccountsService,
+    private transactionService: TransactionsService
     ) {}
 
 
-    ngOnInit(): void {
-       this.customerService.getAllCustomers()
-       .subscribe(customers => {
-        this.customers = customers
-       })       
-    }
+  ngOnInit(): void {
+      this.customerService.getAllCustomers()
+      .subscribe(customers => {
+      this.customers = customers
+      })       
+  }
 
-    addCurrentAccount() {
-      if(this.selectedCustomer == undefined) return
-      this.isSaving = true
-      this.accountservice
-      .createCurrentAccountByDto({customerId: this.selectedCustomer, initialCredit:this.initialCredit})
-      .subscribe(() => {
-        alert('New Account was created')
-        this.isSaving = false
-      })      
-    }
+  addCurrentAccount() {
+    if(this.selectedCustomer == undefined) return
+    this.isSaving = true
+    this.accountservice
+    .createCurrentAccountByDto({customerId: this.selectedCustomer, initialCredit:this.initialCredit})
+    .subscribe(() => {
+      alert('New Account was created')
+      this.isSaving = false
+      this.initialCredit = 0
+    })      
+  }
 
   login() {
     this.authService.navigateToLogin();
@@ -57,9 +61,15 @@ export class HomeComponent implements OnInit {
   }
 
   showTransactions(account) {
-    this.accountservice.getAccountTransactionsById(account.id)
+    this.selectedAccount = account
+    this.transactionService.getAccountTransactionsById(account.id)
     .subscribe(transactions => {
       this.transactions = transactions
     })
+  }
+
+  refresh() {
+    if(this.accounts.length>0) 
+      this.handleCustomerChange();
   }
 }

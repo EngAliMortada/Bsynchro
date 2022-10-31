@@ -2,6 +2,9 @@
     padding: 10px;
 }
 
+.top-space {
+    margin-top: 50px;
+}
 
 .bottom-space {
     margin-bottom: 30px;
@@ -53,4 +56,15 @@ button {
     border-radius: 4px;
     border: 2px solid green;
     color: green;
+    font-weight: 600;
+}
+
+.refreshBtn {
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+    border: 2px solid rgb(0, 85, 128);
+    color: rgb(0, 85, 128);
+    font-weight: 600;
 }

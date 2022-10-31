@@ -19,5 +19,12 @@ namespace Bsynchro.Controllers.Transactions
         {
             _transactionsAppService = transactionsAppService;
         }
+
+        [HttpGet]
+        [Route("get-account-transactions")]
+        public async Task<List<TransactionDto>> GetAccountTransactions(long id)
+        {
+            return await _transactionsAppService.GetAccountTransactions(id);
+        }
     }
 }
