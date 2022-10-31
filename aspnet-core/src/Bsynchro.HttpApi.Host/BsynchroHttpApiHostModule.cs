@@ -31,12 +31,17 @@ using Volo.Abp.VirtualFileSystem;
 using Microsoft.EntityFrameworkCore;
 using EntityFrameworkCore.Triggered.Internal;
 using Bsynchro.Triggers;
+using Bsynchro.Accounts;
+using Bsynchro.Customers;
+using Volo.Abp.AutoMapper;
+using Bsynchro.Transactions;
 
 namespace Bsynchro;
 
 [DependsOn(
     typeof(BsynchroHttpApiModule),
     typeof(AbpAutofacModule),
+    typeof(AbpAutoMapperModule),
     typeof(AbpAspNetCoreMultiTenancyModule),
     typeof(BsynchroApplicationModule),
     typeof(BsynchroEntityFrameworkCoreModule),
@@ -56,21 +61,24 @@ public class BsynchroHttpApiHostModule : AbpModule
                 options.AddAudiences("Bsynchro");
                 options.UseLocalServer();
                 options.UseAspNetCore();
-            });
+            });     
         });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
-        context.Services.AddDbContext<BsynchroDbContext>(options =>
-        {
-            options.UseTriggers(triggerOptions =>
-            {
-                triggerOptions.AddTrigger<AddTransactionTrigger>();
-            });
-        });
+
+        context.Services.AddTransient<IAccountsRepository, EfAccountsRepository>();
+        context.Services.AddTransient<ICustomersRepository, EfCustomersRepository>();
+        context.Services.AddTransient<ITransactionsRepository, EfTransactionsRepository>();
+        context.Services.AddScoped<ICustomerAppService, CustomerAppService>();
+        context.Services.AddScoped<IAccountsAppService, AccountsAppService>();
+        context.Services.AddScoped<ITransactionsAppService, TransactionsAppService>();
+        context.Services.AddAutoMapperObjectMapper<BsynchroApplicationModule>();
+
         ConfigureAuthentication(context);
         ConfigureBundles();
         ConfigureUrls(configuration);
@@ -79,6 +87,7 @@ public class BsynchroHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
+        
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -134,6 +143,9 @@ public class BsynchroHttpApiHostModule : AbpModule
                         $"..{Path.DirectorySeparatorChar}Bsynchro.Application"));
             });
         }
+
+        ConfigureTrigggers(context);
+        ConfigureRepositories(context);
     }
 
     private void ConfigureConventionalControllers()
@@ -207,6 +219,22 @@ public class BsynchroHttpApiHostModule : AbpModule
                     .AllowCredentials();
             });
         });
+    }
+
+    public void ConfigureTrigggers (ServiceConfigurationContext context)
+    {
+        context.Services.AddDbContext<BsynchroDbContext>(options =>
+        {
+            options.UseTriggers(triggerOptions =>
+            {
+                triggerOptions.AddTrigger<AddTransactionTrigger>();
+            });
+        });
+    }
+
+    public void ConfigureRepositories(ServiceConfigurationContext context)
+    {
+        
     }
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)

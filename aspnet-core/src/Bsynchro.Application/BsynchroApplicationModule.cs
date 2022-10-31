@@ -11,6 +11,7 @@ namespace Bsynchro;
 
 [DependsOn(
     typeof(BsynchroDomainModule),
+    typeof(AbpAutoMapperModule),
     typeof(AbpAccountApplicationModule),
     typeof(BsynchroApplicationContractsModule),
     typeof(AbpIdentityApplicationModule),

@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Bsynchro.Accounts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Volo.Abp.Domain.Entities.Auditing;
 
-namespace Bsynchro.Accounts
+namespace Bsynchro.Transactions
 {
-    public class Transaction : FullAuditedEntity<Guid>
+    public class Transaction : FullAuditedAggregateRoot<Guid>
     {
         #region properties
         public long AccountId { get; private set; }
@@ -17,7 +18,7 @@ namespace Bsynchro.Accounts
         #endregion
 
 
-        
+
         protected Transaction()
         {
 

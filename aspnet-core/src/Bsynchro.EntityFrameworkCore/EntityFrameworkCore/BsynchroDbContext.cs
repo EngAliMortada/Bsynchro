@@ -1,5 +1,6 @@
 ﻿using Bsynchro.Accounts;
 using Bsynchro.Customers;
+using Bsynchro.Transactions;
 using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;

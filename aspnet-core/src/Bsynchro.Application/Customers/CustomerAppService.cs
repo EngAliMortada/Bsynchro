@@ -26,7 +26,10 @@ namespace Bsynchro.Customers
 
         public async Task<CustomerDto> GetCustomer(int id)
         {
-            var customer = await (await _customerRepository.GetQueryableAsync()).Where(customer => customer.Id == id).AsNoTracking().FirstOrDefaultAsync();
+            var customer = await (await _customerRepository.GetQueryableAsync()).Where(customer => customer.Id == id)
+                .Include(customer => customer.Accounts)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
             return _objectMapper.Map<Customer, CustomerDto>(customer);
         }
     }

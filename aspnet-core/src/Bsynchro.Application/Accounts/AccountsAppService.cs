@@ -1,4 +1,6 @@
-﻿using Bsynchro.Customers;
+﻿using AutoMapper.Internal.Mappers;
+using Bsynchro.Customers;
+using Bsynchro.Transactions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,12 +18,19 @@ namespace Bsynchro.Accounts
     public class AccountsAppService : IAccountsAppService
     {
         private readonly IAccountsRepository _accountsRepository;
+        private readonly ITransactionsRepository _transactionsRepository;
         private readonly IObjectMapper<BsynchroApplicationModule> _objectMapper;
 
-        public AccountsAppService(IAccountsRepository accountsRepository, IObjectMapper<BsynchroApplicationModule> objectMapper)
+        public AccountsAppService
+        (
+            IAccountsRepository accountsRepository,
+            IObjectMapper<BsynchroApplicationModule> objectMapper,
+            ITransactionsRepository transactionsRepository
+        )
         {
             _accountsRepository = accountsRepository;            
             _objectMapper = objectMapper;
+            _transactionsRepository = transactionsRepository;
         }
 
 
@@ -30,7 +39,10 @@ namespace Bsynchro.Accounts
         #region Getters
         public async Task<List<AccountDto>> GetCustomerAccounts (int id)
         {
-            var accounts = await (await _accountsRepository.GetQueryableAsync()).Where(account => account.CustomerId == id).AsNoTracking().ToListAsync();
+            var accounts = await (await _accountsRepository.GetQueryableAsync())
+                .Where(account => account.CustomerId == id)
+                .AsNoTracking()
+                .ToListAsync();
 
             return _objectMapper.Map<List<Account>, List<AccountDto>>(accounts);
         }
@@ -41,8 +53,8 @@ namespace Bsynchro.Accounts
                 .Include(x => x.Transactions)
                 .Select(x=>x.Transactions)
                 .FirstOrDefaultAsync()).ToList();
-                
-                
+
+
             return _objectMapper.Map<List<Transaction>, List<TransactionDto>>(transactions);
         }
         #endregion
@@ -53,11 +65,10 @@ namespace Bsynchro.Accounts
             try
             {
                 var account = await _accountsRepository.InsertAsync(_objectMapper.Map<InitializeCurrentAccountDto, Account>(dto), true);
-                
+
                 if (dto.InitialCredit > 0)
                 {
-                    account.AddTransaction(Transaction.Create(account.Id, dto.InitialCredit, null));
-                    await _accountsRepository.UpdateAsync(account, true);
+                    await _transactionsRepository.InsertAsync(Transaction.Create(account.Id, dto.InitialCredit, null), true);
                 }
 
                 return true;

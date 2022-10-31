@@ -4,7 +4,7 @@ using System.Text;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Domain.Entities;
 
-namespace Bsynchro.Accounts
+namespace Bsynchro.Transactions
 {
     public class TransactionDto : EntityDto<Guid>
     {

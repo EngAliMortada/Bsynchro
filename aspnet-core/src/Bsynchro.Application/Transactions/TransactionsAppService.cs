@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Volo.Abp;
 using Volo.Abp.ObjectMapping;
 
-namespace Bsynchro.Accounts
+namespace Bsynchro.Transactions
 {
     [RemoteService(IsEnabled = false)]
     public class TransactionsAppService : ITransactionsAppService
     {
-        
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bsynchro.Accounts;
 using Bsynchro.Customers;
+using Bsynchro.Transactions;
 
 namespace Bsynchro;
 
@@ -11,10 +12,11 @@ public class BsynchroApplicationAutoMapperProfile : Profile
         CreateMap<Account, AccountDto>();
 
         CreateMap<InitializeCurrentAccountDto, Account>()
-            .ForMember(x => x.AccountType, options => options.MapFrom(src => 0))
-            .ForMember(x => x.Balance, options => options.MapFrom(src => 0));
+            .ForMember(destination => destination.AccountType, options => options.MapFrom(src => 0))
+            .ForMember(destination => destination.Balance, options => options.MapFrom(src => 0));
 
-        CreateMap<Customer, CustomerDto>();
+        CreateMap<Customer, CustomerDto>()
+            .ForMember(destination => destination.Balance, options => options.MapFrom(src => src.GetTotalBalance()));
 
         CreateMap<Transaction, TransactionDto>();
 

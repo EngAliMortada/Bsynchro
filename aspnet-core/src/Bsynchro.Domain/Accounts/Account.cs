@@ -1,4 +1,5 @@
 ﻿using Bsynchro.Customers;
+using Bsynchro.Transactions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -43,6 +44,7 @@ namespace Bsynchro.Accounts
 
         public void AddTransaction (Transaction transaction)
         {
+            if (Transactions == null) Transactions = new List<Transaction>();
             Transactions.Add(transaction);
         }
 
