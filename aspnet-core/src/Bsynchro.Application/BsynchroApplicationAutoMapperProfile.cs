@@ -15,8 +15,7 @@ public class BsynchroApplicationAutoMapperProfile : Profile
             .ForMember(destination => destination.AccountType, options => options.MapFrom(src => 0))
             .ForMember(destination => destination.Balance, options => options.MapFrom(src => 0));
 
-        CreateMap<Customer, CustomerDto>()
-            .ForMember(destination => destination.Balance, options => options.MapFrom(src => src.GetTotalBalance()));
+        CreateMap<Customer, CustomerDto>();
 
         CreateMap<Transaction, TransactionDto>();
 

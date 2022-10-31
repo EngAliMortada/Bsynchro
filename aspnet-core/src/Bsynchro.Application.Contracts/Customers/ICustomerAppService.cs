@@ -9,5 +9,7 @@ namespace Bsynchro.Customers
     public interface ICustomerAppService : IApplicationService
     {
         Task<CustomerDto> GetCustomer(int id);
+
+        Task<List<CustomerDto>> GetAllCustomers();
     }
 }

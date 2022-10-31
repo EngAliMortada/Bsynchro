@@ -1,1 +1,56 @@
-/* Styles for the home component */
+.container {
+    padding: 10px;
+}
+
+
+.bottom-space {
+    margin-bottom: 30px;
+}
+
+.left-space {
+    margin-left: 40px;
+}
+
+.pad-top {
+    padding-top: 15px;
+}
+
+.apply-flex {
+    display: flex;
+    flex-direction: column;
+}
+
+
+select {
+    width: 70%;
+    height: 25px;
+}
+
+input[type = number]{
+    width: 30%;
+}
+
+tr{
+    border-bottom: 1px solid black;
+}
+
+button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: blue;
+    width: 140px;
+    font-size: 12px;
+    height: 30px;
+    margin-block: 5px;
+    border: 2px solid;
+}
+
+.createAccountBtn {
+    width: 200px;
+    display: flex;
+    justify-content: center;
+    border-radius: 4px;
+    border: 2px solid green;
+    color: green;
+}

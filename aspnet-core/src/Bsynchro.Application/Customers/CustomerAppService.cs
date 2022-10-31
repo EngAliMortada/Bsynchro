@@ -32,5 +32,12 @@ namespace Bsynchro.Customers
                 .FirstOrDefaultAsync();
             return _objectMapper.Map<Customer, CustomerDto>(customer);
         }
+
+        public async Task<List<CustomerDto>> GetAllCustomers ()
+        {
+            var customers = await (await _customerRepository.GetQueryableAsync()).ToListAsync();
+
+            return _objectMapper.Map<List<Customer>, List<CustomerDto>>(customers);
+        }
     }
 }

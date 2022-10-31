@@ -58,6 +58,7 @@ namespace Bsynchro.Accounts
 
             if (transaction.Withdraw.HasValue)
             {
+                if (Balance < transaction.Withdraw.Value) throw new Exception();
                 Balance -= transaction.Withdraw.Value;
             }
         }

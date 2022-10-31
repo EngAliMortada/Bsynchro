@@ -27,6 +27,15 @@ namespace Bsynchro.Controllers.Customers
         {
             return await _customerAppService.GetCustomer(id);
         }
-        
+
+
+        [Route("get-all-customers")]
+        [HttpGet]
+        public async Task<List<CustomerDto>> GetAllCustomers()
+        {
+            return await _customerAppService.GetAllCustomers();
+        }
+
+
     }
 }

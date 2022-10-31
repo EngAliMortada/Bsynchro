@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bsynchro.Accounts;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
@@ -12,7 +13,5 @@ namespace Bsynchro.Customers
         public string Name { get; set; }
         [Required]
         public string SurName { get; set; }
-
-        public ulong Balance { get; set; }
     }
 }
