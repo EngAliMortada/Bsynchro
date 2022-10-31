@@ -28,12 +28,20 @@ using Volo.Abp.Modularity;
 using Volo.Abp.Swashbuckle;
 using Volo.Abp.UI.Navigation.Urls;
 using Volo.Abp.VirtualFileSystem;
+using Microsoft.EntityFrameworkCore;
+using EntityFrameworkCore.Triggered.Internal;
+using Bsynchro.Triggers;
+using Bsynchro.Accounts;
+using Bsynchro.Customers;
+using Volo.Abp.AutoMapper;
+using Bsynchro.Transactions;
 
 namespace Bsynchro;
 
 [DependsOn(
     typeof(BsynchroHttpApiModule),
     typeof(AbpAutofacModule),
+    typeof(AbpAutoMapperModule),
     typeof(AbpAspNetCoreMultiTenancyModule),
     typeof(BsynchroApplicationModule),
     typeof(BsynchroEntityFrameworkCoreModule),
@@ -53,14 +61,23 @@ public class BsynchroHttpApiHostModule : AbpModule
                 options.AddAudiences("Bsynchro");
                 options.UseLocalServer();
                 options.UseAspNetCore();
-            });
+            });     
         });
     }
 
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
+        
         var configuration = context.Services.GetConfiguration();
         var hostingEnvironment = context.Services.GetHostingEnvironment();
+
+        context.Services.AddTransient<IAccountsRepository, EfAccountsRepository>();
+        context.Services.AddTransient<ICustomersRepository, EfCustomersRepository>();
+        context.Services.AddTransient<ITransactionsRepository, EfTransactionsRepository>();
+        context.Services.AddScoped<ICustomerAppService, CustomerAppService>();
+        context.Services.AddScoped<IAccountsAppService, AccountsAppService>();
+        context.Services.AddScoped<ITransactionsAppService, TransactionsAppService>();
+        context.Services.AddAutoMapperObjectMapper<BsynchroApplicationModule>();
 
         ConfigureAuthentication(context);
         ConfigureBundles();
@@ -199,6 +216,12 @@ public class BsynchroHttpApiHostModule : AbpModule
             });
         });
     }
+
+    public void ConfigureTrigggers (ServiceConfigurationContext context)
+    {
+        
+    }
+
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

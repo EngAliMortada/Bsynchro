@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Bsynchro.Migrations
 {
-    public partial class Initial : Migration
+    public partial class migratemodels : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -274,6 +274,30 @@ namespace Bsynchro.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AbpUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SurName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -569,6 +593,36 @@ namespace Bsynchro.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Accounts",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountType = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    Balance = table.Column<decimal>(type: "decimal(20,0)", nullable: false),
+                    ExtraProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Accounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Accounts_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -619,6 +673,33 @@ namespace Bsynchro.Migrations
                         name: "FK_AbpEntityPropertyChanges_AbpEntityChanges_EntityChangeId",
                         column: x => x.EntityChangeId,
                         principalTable: "AbpEntityChanges",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Transactions",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AccountId = table.Column<long>(type: "bigint", nullable: false),
+                    Deposit = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    Withdraw = table.Column<decimal>(type: "decimal(20,0)", nullable: true),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    DeleterId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DeletionTime = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -823,6 +904,11 @@ namespace Bsynchro.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Accounts_CustomerId",
+                table: "Accounts",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -851,6 +937,11 @@ namespace Bsynchro.Migrations
                 name: "IX_OpenIddictTokens_ReferenceId",
                 table: "OpenIddictTokens",
                 column: "ReferenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_AccountId",
+                table: "Transactions",
+                column: "AccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -913,6 +1004,9 @@ namespace Bsynchro.Migrations
                 name: "OpenIddictTokens");
 
             migrationBuilder.DropTable(
+                name: "Transactions");
+
+            migrationBuilder.DropTable(
                 name: "AbpEntityChanges");
 
             migrationBuilder.DropTable(
@@ -931,10 +1025,16 @@ namespace Bsynchro.Migrations
                 name: "OpenIddictAuthorizations");
 
             migrationBuilder.DropTable(
+                name: "Accounts");
+
+            migrationBuilder.DropTable(
                 name: "AbpAuditLogs");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictApplications");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
         }
     }
 }

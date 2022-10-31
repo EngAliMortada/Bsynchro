@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Bsynchro.Accounts;
+using Bsynchro.Customers;
+using Bsynchro.Transactions;
+using Microsoft.EntityFrameworkCore;
 using Volo.Abp.AuditLogging.EntityFrameworkCore;
 using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
 using Volo.Abp.Data;
@@ -24,6 +27,13 @@ public class BsynchroDbContext :
     ITenantManagementDbContext
 {
     /* Add DbSet properties for your Aggregate Roots / Entities here. */
+    public DbSet<Account> Accounts { get; set; }
+
+    public DbSet<Customer> Customers { get; set; }
+
+    public DbSet<Transaction> Transactions { get; set; }
+
+
 
     #region Entities from the modules
 
@@ -55,7 +65,7 @@ public class BsynchroDbContext :
     public BsynchroDbContext(DbContextOptions<BsynchroDbContext> options)
         : base(options)
     {
-
+       
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

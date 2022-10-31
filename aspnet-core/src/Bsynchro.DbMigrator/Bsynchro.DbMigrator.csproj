@@ -31,6 +31,7 @@
   <ItemGroup>
     <PackageReference Include="Volo.Abp.Autofac" Version="6.0.1" />
     <ProjectReference Include="..\Bsynchro.Application.Contracts\Bsynchro.Application.Contracts.csproj" />
+    <ProjectReference Include="..\Bsynchro.Domain\Bsynchro.Domain.csproj" />
     <ProjectReference Include="..\Bsynchro.EntityFrameworkCore\Bsynchro.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
