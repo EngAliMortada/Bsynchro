@@ -1,28 +1,41 @@
-﻿using Bsynchro.EntityFrameworkCore;
+﻿using Bsynchro.Accounts;
+using Bsynchro.EntityFrameworkCore;
+using Bsynchro.Transactions;
 using EntityFrameworkCore.Triggered;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
+
 
 namespace Bsynchro.Triggers
 {   
+    //this trigger update the Account balance each time a transaction is inserted
     public class AddTransactionTrigger : IAfterSaveTrigger<Transaction>
     {
-        private readonly BsynchroDbContext _db;
+        private readonly IAccountsRepository _accountsRepository;
 
-        public AddTransactionTrigger(BsynchroDbContext db)
+
+        public AddTransactionTrigger(IAccountsRepository accountsRepository)
         {
-            _db = db;
+            _accountsRepository = accountsRepository;
         }
 
         public async Task AfterSave(ITriggerContext<Transaction> context, CancellationToken cancellationToken)
         {
-            
-        }
+            Transaction newTransaction = context.Entity;
+            var account = await (await _accountsRepository.GetQueryableAsync())
+                .Where(account => account.Id == newTransaction.AccountId)
+                .FirstOrDefaultAsync();
 
+            if(account != null)
+            {
+                account.UpdateBalance(newTransaction);
+                await _accountsRepository.UpdateAsync(account, true);
+            }
+        }
     }
 }

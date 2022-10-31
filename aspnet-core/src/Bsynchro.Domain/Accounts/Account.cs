@@ -49,7 +49,18 @@ namespace Bsynchro.Accounts
         }
 
 
+        public void UpdateBalance(Transaction transaction)
+        {
+            if (transaction.Deposit.HasValue)
+            {
+                Balance += transaction.Deposit.Value;
+            }
 
+            if (transaction.Withdraw.HasValue)
+            {
+                Balance -= transaction.Withdraw.Value;
+            }
+        }
 
         
     }

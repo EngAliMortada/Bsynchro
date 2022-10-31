@@ -52,6 +52,7 @@ namespace Bsynchro.Accounts
                 .Where(x => x.Id == id)
                 .Include(x => x.Transactions)
                 .Select(x=>x.Transactions)
+                .AsNoTracking()
                 .FirstOrDefaultAsync()).ToList();
 
 

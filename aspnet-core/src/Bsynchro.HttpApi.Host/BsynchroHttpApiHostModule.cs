@@ -87,7 +87,6 @@ public class BsynchroHttpApiHostModule : AbpModule
         ConfigureVirtualFileSystem(context);
         ConfigureCors(context, configuration);
         ConfigureSwaggerServices(context, configuration);
-        
     }
 
     private void ConfigureAuthentication(ServiceConfigurationContext context)
@@ -143,9 +142,6 @@ public class BsynchroHttpApiHostModule : AbpModule
                         $"..{Path.DirectorySeparatorChar}Bsynchro.Application"));
             });
         }
-
-        ConfigureTrigggers(context);
-        ConfigureRepositories(context);
     }
 
     private void ConfigureConventionalControllers()
@@ -223,19 +219,9 @@ public class BsynchroHttpApiHostModule : AbpModule
 
     public void ConfigureTrigggers (ServiceConfigurationContext context)
     {
-        context.Services.AddDbContext<BsynchroDbContext>(options =>
-        {
-            options.UseTriggers(triggerOptions =>
-            {
-                triggerOptions.AddTrigger<AddTransactionTrigger>();
-            });
-        });
-    }
-
-    public void ConfigureRepositories(ServiceConfigurationContext context)
-    {
         
     }
+
 
     public override void OnApplicationInitialization(ApplicationInitializationContext context)
     {

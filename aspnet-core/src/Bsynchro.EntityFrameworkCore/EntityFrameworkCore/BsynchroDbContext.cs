@@ -65,7 +65,7 @@ public class BsynchroDbContext :
     public BsynchroDbContext(DbContextOptions<BsynchroDbContext> options)
         : base(options)
     {
-
+       
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
